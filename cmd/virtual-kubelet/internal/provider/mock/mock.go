@@ -147,26 +147,35 @@ func (p *MockProvider) CreatePod(ctx context.Context, pod *v1.Pod) error {
 	}
 
 	now := metav1.NewTime(time.Now())
-	pod.Status = v1.PodStatus{
-		Phase:     v1.PodRunning,
-		HostIP:    "1.2.3.4",
-		PodIP:     "5.6.7.8",
-		StartTime: &now,
-		Conditions: []v1.PodCondition{
-			{
-				Type:   v1.PodInitialized,
-				Status: v1.ConditionTrue,
-			},
-			{
-				Type:   v1.PodReady,
-				Status: v1.ConditionTrue,
-			},
-			{
-				Type:   v1.PodScheduled,
-				Status: v1.ConditionTrue,
-			},
-		},
-	}
+	// pod.Status = v1.PodStatus{
+	// 	Phase:     v1.PodRunning,
+	// 	HostIP:    "1.2.3.4",
+	// 	PodIP:     "5.6.7.8",
+	// 	StartTime: &now,
+	// 	Conditions: []v1.PodCondition{
+	// 		{
+	// 			Type:   v1.PodInitialized,
+	// 			Status: v1.ConditionTrue,
+	// 		},
+	// 		{
+	// 			Type:   v1.PodReady,
+	// 			Status: v1.ConditionTrue,
+	// 		},
+	// 		{
+	// 			Type:   v1.PodScheduled,
+	// 			Status: v1.ConditionTrue,
+	// 		},
+	// 	},
+	// }
+	pod.Status.Phase = v1.PodRunning
+	pod.Status.HostIP = "1.2.3.4"
+	pod.Status.PodIP = "5.6.7.8"
+	pod.Status.StartTime = &now
+	pod.Status.Conditions = append(pod.Status.Conditions, v1.PodCondition{
+		Type:               v1.PodReady,
+		Status:             v1.ConditionTrue,
+		LastTransitionTime: now,
+	})
 
 	for _, container := range pod.Spec.Containers {
 		pod.Status.ContainerStatuses = append(pod.Status.ContainerStatuses, v1.ContainerStatus{
