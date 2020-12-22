@@ -175,6 +175,7 @@ func (p *MockProvider) CreatePod(ctx context.Context, pod *v1.Pod) error {
 		Type:               v1.PodReady,
 		Status:             v1.ConditionTrue,
 		LastTransitionTime: now,
+		Message:            "this is written by vk",
 	})
 
 	for _, container := range pod.Spec.Containers {
